@@ -8,20 +8,11 @@ This guide will help you understand how to get involved, submit your work, and c
 ## Filing a Bug Report
 If you find a bug:
 1. **Search** existing [issues](https://github.com/SOFTENG-310-OneMed1a/OneMed1a_App/issues) to avoid duplicates.
-2. If it’s new, **open an issue** with:
-   - A clear, descriptive title
-   - Steps to reproduce
-   - Expected vs actual behavior
-   - Screenshots or logs (if applicable)
-   - Environment details (OS, browser, Node version, etc.)
+2. If it’s new, **open a Bug issue** following the [bug report template](.github/ISSUE_TEMPLATE/bug_report.md).
 
 ## Suggesting a New Feature
 1. **Check** existing [feature requests](https://github.com/SOFTENG-310-OneMed1a/OneMed1a_App/issues?q=is%3Aissue%20state%3Aopen%20type%3AFeature).
-2. If not found, open a **Feature Request issue** with:
-   - A short summary of the idea
-   - Why it’s valuable
-   - Potential implementation approach
-   - Any alternatives considered
+2. If not found, open a **Feature Request issue** following the [feature request template](.github/ISSUE_TEMPLATE/feature_request.md).
 
 ## Submitting a Pull Request
 1. **Check** existing [pull requests](https://github.com/SOFTENG-310-OneMed1a/OneMed1a_App/pulls) to avoid duplicates.
@@ -72,8 +63,9 @@ and start working on any issues labeled with "good first issue".
   - Next JS
 
 ### Backend:
-  - Java Sprintboot
+  - Java SpringBoot
   - Supabase
+  - postgreSQL
 
 ## Project vision & roadmap
 `OneMed1a` aims to develop a unified web application that aggregates movies, TV shows, books,
@@ -96,13 +88,25 @@ place, transforming fragmented media browsing into a cohesive, socially driven e
    - Completed, watching, plan to watch
 4. Creating accounts
    - Allows users to save their accounts and save their data
+5. Friends feature:
+   - Add friends
+   - View friend’s rating
+   - View friend’s analytics (number of movies/media watched)
+   - Recommends to you the friend’s top picks
+6. Recommendation Features
+   - Modify recommendation implementation to consider mood
+7. Blend Mode (if time allows)
+   - Choose a friend, combine and compare data and return a compatibility score
+   - Scoreboard to display compatibility scores
 
 ## High-level design
 ### Frontend
   - Next JS
 ### Backend
-  - Java Sprintboot
+  - Java SpringBoot
 ### Database
+  - postgreSQL
+### User authentication
   - Supabase
 ### APIs
   - OpenAI
