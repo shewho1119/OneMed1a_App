@@ -1,16 +1,14 @@
-package com.onemed1a.backend.MediaData;
+package com.onemed1a.backend.mediadata;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,6 +26,9 @@ public class MediaData {
     @Column(name = "id", nullable = false, updatable = false)
     private UUID mediaId;
 
+    @Column(name = "external_media_id", nullable = false, updatable = false)
+    private Integer externalMediaId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, length = 16)
     private MediaType type; // MOVIE, TV, MUSIC, BOOKS
@@ -36,16 +37,12 @@ public class MediaData {
     private String title;
 
     @Column(name = "release_year")
-    private Integer releaseYear;
+    private String releaseDate;
 
-    // Stores genres in a simple join table: media_genres(media_id, genre)
-//    @ElementCollection
-//    @CollectionTable(
-//            name = "media_genres",
-//            joinColumns = @JoinColumn(name = "media_id", referencedColumnName = "id")
-//    )
-//    @Column(name = "genre", nullable = false)
-//    private List<String> genres = new ArrayList<>();
+//     Stores genres in a simple join table: media_genres(media_id, genre)
+    @ElementCollection
+    @Column(name = "genre", nullable = false)
+    private List<Integer> genres = new ArrayList<>();
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
