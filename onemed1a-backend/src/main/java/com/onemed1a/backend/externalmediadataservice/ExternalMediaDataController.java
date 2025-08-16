@@ -49,6 +49,16 @@ public class ExternalMediaDataController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/music")
+    public ResponseEntity<List<MediaData>> getMusicMediaItems() {
+        try {
+            return externalMediaDataService.getMusicMediaItems();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 }
