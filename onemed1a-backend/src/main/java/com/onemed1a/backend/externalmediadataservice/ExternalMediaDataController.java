@@ -1,7 +1,7 @@
 package com.onemed1a.backend.externalmediadataservice;
 
 
-import com.onemed1a.backend.mediadata.MediaData;
+import com.onemed1a.backend.media.MediaData;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,5 +38,17 @@ public class ExternalMediaDataController {
         }
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/books")
+    public ResponseEntity<List<MediaData>> getBookMediaItems() {
+        try {
+            return externalMediaDataService.getBooksMediaItems();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }

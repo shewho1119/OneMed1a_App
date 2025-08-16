@@ -1,4 +1,4 @@
-package com.onemed1a.backend.mediadata;
+package com.onemed1a.backend.media;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,7 +27,7 @@ public class MediaData {
     private UUID mediaId;
 
     @Column(name = "external_media_id", nullable = false, updatable = false)
-    private Integer externalMediaId;
+    private String externalMediaId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, length = 16)
@@ -42,7 +42,7 @@ public class MediaData {
 //     Stores genres in a simple join table: media_genres(media_id, genre)
     @ElementCollection
     @Column(name = "genre", nullable = false)
-    private List<Integer> genres = new ArrayList<>();
+    private List<String> genres = new ArrayList<>();
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
