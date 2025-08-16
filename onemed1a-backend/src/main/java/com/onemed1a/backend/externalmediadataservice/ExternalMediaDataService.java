@@ -1,10 +1,11 @@
 package com.onemed1a.backend.externalmediadataservice;
 
-import com.onemed1a.backend.externalapiresponses.movies.TmdbResponseDTO;
+import com.onemed1a.backend.externalapiresponses.movies.TmdbMovieResponse;
+import com.onemed1a.backend.externalapiresponses.movies.TmdbMovieResponseDTO;
+import com.onemed1a.backend.externalapiresponses.tv.TmdbTVResponseDTO;
 import com.onemed1a.backend.mediadata.MediaData;
-import com.onemed1a.backend.externalapiresponses.movies.TmdbResponse;
+import com.onemed1a.backend.externalapiresponses.tv.TmdbTVResponse;
 import com.onemed1a.backend.mediadata.MediaDataRepository;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -12,12 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -47,26 +45,25 @@ public class ExternalMediaDataService {
 
     public ResponseEntity<List<MediaData>> getMovieMediaItems() {
 
-        // Headers
         HttpEntity<Void> request = new HttpEntity<>(configureTMDBHeader());
 
-        ResponseEntity<TmdbResponseDTO> response =
-                restTemplate.exchange(URI.create(MOVIE_API_URL), HttpMethod.GET, request, TmdbResponseDTO.class);
+        ResponseEntity<TmdbMovieResponseDTO> response =
+                restTemplate.exchange(URI.create(MOVIE_API_URL), HttpMethod.GET, request, TmdbMovieResponseDTO.class);
 
-        TmdbResponseDTO body = response.getBody();
+        TmdbMovieResponseDTO body = response.getBody();
         List<MediaData> mediaDataList = new ArrayList<>();
 
-        for (TmdbResponse tmdbResponse : body
-                .getResults()) {
+        for (TmdbMovieResponse tmdbMovieResponse : body.getResults()) {
+
             MediaData newMediaDataItem = MediaData.builder()
-                    .externalMediaId(tmdbResponse.getId())
+                    .externalMediaId(tmdbMovieResponse.getId())
                     .type(MediaData.MediaType.MOVIE)
-                    .title(tmdbResponse.getName())
-                    .releaseDate(tmdbResponse.getReleaseDate())
-                    .genres(tmdbResponse.getGenreIds())
-                    .description(tmdbResponse.getOverview())
-                    .posterUrl(tmdbResponse.getPosterPath())
-                    .backdropUrl(tmdbResponse.getBackdropPath())
+                    .title(tmdbMovieResponse.getTitle())
+                    .releaseDate(tmdbMovieResponse.getReleaseDate())
+                    .genres(tmdbMovieResponse.getGenreIds())
+                    .description(tmdbMovieResponse.getOverview())
+                    .posterUrl(tmdbMovieResponse.getPosterPath())
+                    .backdropUrl(tmdbMovieResponse.getBackdropPath())
                     .build();
 
             mediaDataList.add(newMediaDataItem);
@@ -74,6 +71,36 @@ public class ExternalMediaDataService {
         }
 
         return ResponseEntity.ok(mediaDataList);
+    }
+
+    public ResponseEntity<List<MediaData>> getTvMediaItems() {
+
+        HttpEntity<Void> request = new HttpEntity<>(configureTMDBHeader());
+
+        ResponseEntity<TmdbTVResponseDTO> response =
+                restTemplate.exchange(URI.create(TV_API_URL), HttpMethod.GET, request, TmdbTVResponseDTO.class);
+
+        TmdbTVResponseDTO body = response.getBody();
+        List<MediaData> mediaDataList = new ArrayList<>();
+
+        for (TmdbTVResponse tmdbTVResponse : body.getResults()) {
+            MediaData newMediaDataItem = MediaData.builder()
+                    .externalMediaId(tmdbTVResponse.getId())
+                    .type(MediaData.MediaType.TV)
+                    .title(tmdbTVResponse.getName())
+                    .releaseDate(tmdbTVResponse.getFirstAirDate())
+                    .genres(tmdbTVResponse.getGenreIds())
+                    .description(tmdbTVResponse.getOverview())
+                    .posterUrl(tmdbTVResponse.getPosterPath())
+                    .backdropUrl(tmdbTVResponse.getBackdropPath())
+                    .build();
+
+            mediaDataList.add(newMediaDataItem);
+//            mediaDataRepository.save(newMediaDataItem);
+        }
+
+        return ResponseEntity.ok(mediaDataList);
+
     }
 
 

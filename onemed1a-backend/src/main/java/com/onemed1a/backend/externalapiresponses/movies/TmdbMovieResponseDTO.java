@@ -8,8 +8,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class TmdbResponseDTO {
+public class TmdbMovieResponseDTO {
     private int page;
-    private List<TmdbResponse> results;
+    private List<TmdbMovieResponse> results;
 }
 

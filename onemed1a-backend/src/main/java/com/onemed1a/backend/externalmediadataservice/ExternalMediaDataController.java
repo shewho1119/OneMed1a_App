@@ -20,9 +20,19 @@ public class ExternalMediaDataController {
     }
 
     @GetMapping("/movies")
-    public ResponseEntity<List<MediaData>> getMovies() {
+    public ResponseEntity<List<MediaData>> getMovieMediaItems() {
         try {
             return externalMediaDataService.getMovieMediaItems();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/tv")
+    public ResponseEntity<List<MediaData>> getTvMediaItems() {
+        try {
+            return externalMediaDataService.getTvMediaItems();
         } catch (Exception e) {
             e.printStackTrace();
         }
