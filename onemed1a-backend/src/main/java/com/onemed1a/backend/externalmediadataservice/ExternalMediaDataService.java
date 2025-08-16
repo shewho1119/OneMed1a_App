@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -23,7 +24,7 @@ import java.util.List;
     This component is used to load media types into the media database when the application
     starts up.
  */
-@Component
+@Service
 public class ExternalMediaDataService {
 
     private final RestTemplate restTemplate;
@@ -67,10 +68,9 @@ public class ExternalMediaDataService {
                     .build();
 
             mediaDataList.add(newMediaDataItem);
-//            mediaDataRepository.save(newMediaDataItem);
         }
 
-        return ResponseEntity.ok(mediaDataList);
+        return ResponseEntity.ok(mediaDataRepository.saveAll(mediaDataList));
     }
 
     public ResponseEntity<List<MediaData>> getTvMediaItems() {
@@ -96,10 +96,9 @@ public class ExternalMediaDataService {
                     .build();
 
             mediaDataList.add(newMediaDataItem);
-//            mediaDataRepository.save(newMediaDataItem);
         }
 
-        return ResponseEntity.ok(mediaDataList);
+        return ResponseEntity.ok(mediaDataRepository.saveAll(mediaDataList));
 
     }
 
