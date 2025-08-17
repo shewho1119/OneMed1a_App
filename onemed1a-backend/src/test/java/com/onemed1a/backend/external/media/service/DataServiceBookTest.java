@@ -8,6 +8,7 @@ import com.onemed1a.backend.media.MediaDataRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -29,6 +30,15 @@ class DataServiceBookTest {
         restTemplate = mock(RestTemplate.class);
 
         dataService = new DataService(repository, restTemplate);
+
+        ReflectionTestUtils.setField(dataService, "movieApiUrl", "http://fake.example/movies");
+        ReflectionTestUtils.setField(dataService, "tvApiUrl", "http://fake.example/tv");
+        ReflectionTestUtils.setField(dataService, "spotifySearchUrl", "http://fake.example/search");
+        ReflectionTestUtils.setField(dataService, "spotifyTokenUrl", "http://fake.example/token");
+        ReflectionTestUtils.setField(dataService, "spotifyClientId", "cid");
+        ReflectionTestUtils.setField(dataService, "spotifyClientSecret", "secret");
+        ReflectionTestUtils.setField(dataService, "googleBooksUri", "http://fake.example/books");
+        ReflectionTestUtils.setField(dataService, "googleBooksApiKey", "key");
 
         when(repository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
     }

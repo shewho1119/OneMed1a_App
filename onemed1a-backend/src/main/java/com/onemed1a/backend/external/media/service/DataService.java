@@ -7,6 +7,7 @@ import com.onemed1a.backend.external.media.responses.movies.TmdbMovieResponse;
 import com.onemed1a.backend.external.media.responses.movies.TmdbMovieResponseDTO;
 import com.onemed1a.backend.external.media.responses.music.SpotifyAlbum;
 import com.onemed1a.backend.external.media.responses.music.SpotifyResponseDTO;
+
 import com.onemed1a.backend.external.media.responses.music.SpotifyTokenResponse;
 import com.onemed1a.backend.external.media.responses.tv.TmdbTVResponse;
 import com.onemed1a.backend.external.media.responses.tv.TmdbTVResponseDTO;
@@ -41,33 +42,33 @@ public class DataService {
     private final MediaDataRepository mediaDataRepository;
 
     // ---- TMDB (Movies & TV) Configuration ----
-    @Value("${tmdb.movie-url}")
+    @Value("${tmdb.movie.url}")
     private String movieApiUrl;
 
-    @Value("${tmdb.tv-url}")
+    @Value("${tmdb.tv.url}")
     private String tvApiUrl;
 
-    @Value("${tmdb.bearer-token}")
+    @Value("${tmdb.bearer.token}")
     private String tmdbBearerToken;
 
     // ---- Spotify (Music) Configuration ----
-    @Value("${spotify.search-url}")
+    @Value("${spotify.search.url}")
     private String spotifySearchUrl;
 
-    @Value("${spotify.token-url}")
+    @Value("${spotify.token.url}")
     private String spotifyTokenUrl;
 
-    @Value("${spotify.client-id}")
+    @Value("${spotify.client.id}")
     private String spotifyClientId;
 
-    @Value("${spotify.client-secret}")
+    @Value("${spotify.client.secret}")
     private String spotifyClientSecret;
 
     // ---- Google Books (Books) Configuration ----
     @Value("${google.books.uri}")
     private String googleBooksUri;
 
-    @Value("${google.books.api-key}")
+    @Value("${google.books.api.key}")
     private String googleBooksApiKey;
 
     public DataService(MediaDataRepository mediaDataRepository, RestTemplate restTemplate) {
