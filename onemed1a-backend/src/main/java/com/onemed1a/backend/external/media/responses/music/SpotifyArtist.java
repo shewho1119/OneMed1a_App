@@ -1,4 +1,4 @@
-package com.onemed1a.backend.externalapiresponses.music;
+package com.onemed1a.backend.external.media.responses.music;
 
 import lombok.Getter;
 import lombok.Setter;

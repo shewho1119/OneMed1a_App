@@ -1,4 +1,4 @@
-package com.onemed1a.backend.externalapiresponses.tv;
+package com.onemed1a.backend.external.media.responses.tv;
 
 import lombok.Getter;
 import lombok.Setter;

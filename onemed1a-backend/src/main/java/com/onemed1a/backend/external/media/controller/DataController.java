@@ -1,6 +1,7 @@
-package com.onemed1a.backend.externalmediadataservice;
+package com.onemed1a.backend.external.media.controller;
 
 
+import com.onemed1a.backend.external.media.service.DataService;
 import com.onemed1a.backend.media.MediaData;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,18 +12,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/externalMediaData")
-public class ExternalMediaDataController {
+public class DataController {
 
-    private final ExternalMediaDataService externalMediaDataService;
+    private final DataService dataService;
 
-    public ExternalMediaDataController(ExternalMediaDataService externalMediaDataService) {
-        this.externalMediaDataService = externalMediaDataService;
+    public DataController(DataService dataService) {
+        this.dataService = dataService;
     }
 
     @GetMapping("/movies")
     public ResponseEntity<List<MediaData>> getMovieMediaItems() {
         try {
-            return externalMediaDataService.getMovieMediaItems();
+            return dataService.getMovieMediaItems();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,7 +33,7 @@ public class ExternalMediaDataController {
     @GetMapping("/tv")
     public ResponseEntity<List<MediaData>> getTvMediaItems() {
         try {
-            return externalMediaDataService.getTvMediaItems();
+            return dataService.getTvMediaItems();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -42,7 +43,7 @@ public class ExternalMediaDataController {
     @GetMapping("/books")
     public ResponseEntity<List<MediaData>> getBookMediaItems() {
         try {
-            return externalMediaDataService.getBooksMediaItems();
+            return dataService.getBooksMediaItems();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,7 +53,7 @@ public class ExternalMediaDataController {
     @GetMapping("/music")
     public ResponseEntity<List<MediaData>> getMusicMediaItems() {
         try {
-            return externalMediaDataService.getMusicMediaItems();
+            return dataService.getMusicMediaItems();
         } catch (Exception e) {
             e.printStackTrace();
         }

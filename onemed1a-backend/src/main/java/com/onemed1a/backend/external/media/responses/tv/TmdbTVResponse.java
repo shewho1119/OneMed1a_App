@@ -1,10 +1,7 @@
-package com.onemed1a.backend.externalapiresponses.movies;
+package com.onemed1a.backend.external.media.responses.tv;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class TmdbMovieResponse {
+public class TmdbTVResponse {
     private boolean adult;
 
     @JsonProperty("backdrop_path")
@@ -40,10 +37,10 @@ public class TmdbMovieResponse {
     @JsonProperty("poster_path")
     private String posterPath;
 
-    @JsonProperty("release_date")
-    private String releaseDate;
+    @JsonProperty("first_air_date")
+    private String firstAirDate;
 
-    private String title;
+    private String name;
 
     @JsonProperty("vote_average")
     private double voteAverage;

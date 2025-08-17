@@ -1,4 +1,4 @@
-package com.onemed1a.backend.externalapiresponses.music;
+package com.onemed1a.backend.external.media.responses.music;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.*;

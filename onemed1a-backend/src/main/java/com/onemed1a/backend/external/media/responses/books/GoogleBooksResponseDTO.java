@@ -1,4 +1,4 @@
-package com.onemed1a.backend.externalapiresponses.books;
+package com.onemed1a.backend.external.media.responses.books;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
