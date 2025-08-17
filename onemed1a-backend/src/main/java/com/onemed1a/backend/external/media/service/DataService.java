@@ -70,8 +70,8 @@ public class DataService {
     @Value("${google.books.api-key}")
     private String googleBooksApiKey;
 
-    public DataService(MediaDataRepository mediaDataRepository) {
-        this.restTemplate = new RestTemplate();
+    public DataService(MediaDataRepository mediaDataRepository, RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
         this.mediaDataRepository = mediaDataRepository;
     }
 
