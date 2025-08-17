@@ -226,6 +226,15 @@ public class DataService {
         return ResponseEntity.ok(mediaDataRepository.saveAll(mediaDataList));
     }
 
+    /**
+     * Returns all media data items
+     *
+     * @return list of {@link MediaData} of all media types
+     */
+    public List<MediaData> getAllMediaItems() {
+        return mediaDataRepository.findAll();
+    }
+
     // -------------------------
     //   Header Configurations
     // -------------------------
@@ -273,4 +282,6 @@ public class DataService {
         headers.setBearerAuth(spotifyToken);
         return headers;
     }
+
+
 }
