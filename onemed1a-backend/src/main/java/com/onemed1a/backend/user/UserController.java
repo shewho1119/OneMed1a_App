@@ -36,6 +36,12 @@ public class UserController {
         return service.getById(id);
     }
 
+    @PostMapping("/accountcheck")
+    public ResponseEntity<UserDTO> checkSignIn(@Valid @RequestBody LoginRequestDTO body) {
+        UserDTO user = service.checkCredentials(body.getEmail(), body.getPassword());
+        return ResponseEntity.ok(user);
+    }
+
     // --- Current user (/me) routes ---
     @GetMapping("/me")
     public UserDTO getProfile(@RequestHeader("X-User-Id") UUID userId) {
