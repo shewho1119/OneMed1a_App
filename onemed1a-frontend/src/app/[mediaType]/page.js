@@ -1,52 +1,54 @@
 import MediaGrid from "@/components/MediaGrid";
-import PropTypes from "prop-types";
+import { getUserMediaByUserId } from "@/api/mediaAPI";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-const mediaData = {
-  movies: [
-    { id: 1, title: "Inception", coverUrl: "/next.svg", year: 2010 },
-    { id: 2, title: "Interstellar", coverUrl: "/next.svg", year: 2014 },
-  ],
-  tv: [
-    { id: 1, title: "Breaking Bad", coverUrl: "/next.svg", year: 2008 },
-    { id: 2, title: "Dark", coverUrl: "/next.svg", year: 2017 },
-  ],
-  audio: [
-    { id: 1, title: "Abbey Road", coverUrl: "/next.svg", year: 1969 },
-    { id: 2, title: "Thriller", coverUrl: "/next.svg", year: 1982 },
-  ],
-  books: [
-    { id: 1, title: "1984", coverUrl: "/next.svg", year: 1949 },
-    { id: 2, title: "Brave New World", coverUrl: "/next.svg", year: 1932 },
-    { id: 3, title: "Fahrenheit 451", coverUrl: "/next.svg", year: 1953 },
-  ],
+const TMDB_IMG_BASE = "https://image.tmdb.org/t/p/";
+
+const typeMap = {
+  movie: "MOVIE",
+  tv: "TV",
+  music: "MUSIC",
+  books: "BOOKS",
 };
 
-export default async function MediaPage({ params, searchParams }) {
+const pickCover = (posterPath, backdropPath, size = "w342") =>
+    posterPath ? `${TMDB_IMG_BASE}${size}${posterPath}` :
+        (backdropPath ? `${TMDB_IMG_BASE}${size}${backdropPath}` : "/next.svg");
+
+const toYear = (dateStr) => (dateStr ? Number(String(dateStr).slice(0, 4)) : undefined);
+
+export default async function MediaPage({ params }) {
   const { mediaType } = await params;
 
-  // In Next 15+, searchParams is a Promise<URLSearchParams>
-  const sp = await searchParams;
-  const qRaw = typeof sp?.get === "function" ? sp.get("q") : sp?.q;
-  const q = (qRaw || "").toString().trim().toLowerCase();
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("userId")?.value;
+  if (!userId) redirect("/");
 
-  const items = mediaData[mediaType] || [];
-  const filtered = q
-    ? items.filter((it) => {
-        const title = (it.title || "").toLowerCase();
-        const year = String(it.year || "");
-        return title.includes(q) || year.includes(q);
-      })
-    : items;
+  let raw = [];
+  try {
+    raw = (await getUserMediaByUserId(userId)) ?? [];
+  } catch (e) {
+    console.error("Failed to load user media:", e);
+  }
 
+  // Normalize to [{ id, title, coverUrl, year }]
+  const items = raw
+      .filter((ums) => ums?.media?.type === typeMap[mediaType])
+      .map((ums) => ({
+        id: ums.media?.mediaId ?? ums.id, // prefer the media's UUID
+        title: ums.media?.title ?? "",
+        coverUrl: pickCover(ums.media?.posterUrl, ums.media?.backdropUrl),
+        year: toYear(ums.media?.releaseDate),
+        type: ums.media?.type.toLowerCase(),
+      }));
+
+  
   return (
-    <div className="p-4">
-
-      <MediaGrid items={filtered} />
-    </div>
+      <div className="p-4">
+        <MediaNav />
+        <h1 className="text-2xl font-bold my-4">{String(mediaType).toUpperCase()}</h1>
+        <MediaGrid items={items} />
+      </div>
   );
 }
-
-MediaPage.propTypes = {
-  params: PropTypes.any,
-  searchParams: PropTypes.any,
-};
