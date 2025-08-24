@@ -3,24 +3,38 @@ import { notFound } from "next/navigation";
 import BackgroundImage from "@/app/media-details-components/BackgroundImage";
 import PosterImage from "@/app/media-details-components/PosterImage";
 import StarRating from "@/app/media-details-components/StarRating";
-import MediaActionButtons from "@/app/media-details-components/MediaActionButtons";
+import CollectionDropdown from "@/app/media-details-components/CollectionDropdown";
 import Divider from "@/app/media-details-components/Divider";
 import { getMediaById } from "@/api/mediaClient";
+import {cookies} from "next/headers";
+import {getStatus} from "@/api/mediaAPI";
 
 async function getBook(id) {
     try {
         const book = await getMediaById(id);
-        return book; 
+        return book;
     } catch (error) {
         console.error("Error fetching book:", error);
         return null;
     }
 }
 
+async function getMediaStatus(userId, mediaId) {
+    try {
+        return await getStatus(userId, mediaId);
+    } catch (error) {
+        console.log("Not in collection");
+        return null;
+    }
+}
+
 export default async function BookPage({ params }) {
-    const {id} = await params;
+    const { id } = await params;
+    const userId = (await cookies()).get('userId')?.value;
+
     const book = await getBook(id);
     if (!book) notFound();
+    const result = await getMediaStatus(userId, id);
 
     return (
         <main className="min-h-screen bg-gray-100 text-gray-900">
@@ -106,8 +120,15 @@ export default async function BookPage({ params }) {
 
                 <Divider />
 
-                <MediaActionButtons secondaryLabel="Plan to Read" />
-            </div>
+                 <div className="mt-4">
+                     <CollectionDropdown
+                         currentStatus={result === null ? "UNSPECIFIED" : result.status}
+                         userId={userId}
+                         mediaId={book.mediaId}
+                         mediaType={book.type}
+                     />
+                           </div>
+                         </div>
         </main>
     );
 }

@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import BackgroundImage from "@/app/media-details-components/BackgroundImage";
 import PosterImage from "@/app/media-details-components/PosterImage";
 import StarRating from "@/app/media-details-components/StarRating";
-import MediaActionButtons from "@/app/media-details-components/MediaActionButtons";
+import CollectionDropdown from "@/app/media-details-components/CollectionDropdown";
 import Divider from "@/app/media-details-components/Divider";
 import { getMediaById } from "@/api/mediaClient";
+import {cookies} from "next/headers";
+import {getStatus} from "@/api/mediaAPI";
 
 async function getMovie(id) {
     try {
@@ -18,10 +20,23 @@ async function getMovie(id) {
     }
 }
 
-export default async function MoviePage({ params="123" }) {
-    const {id} = await params;
+async function getMediaStatus(userId, mediaId) {
+    try {
+        return await getStatus(userId, mediaId);
+    } catch (error) {
+        console.log("Not in collection");
+        return null;
+    }
+}
+
+
+export default async function MoviePage({ params }) {
+    const { id } = await params;
+    const userId = (await cookies()).get('userId')?.value;
+
     const movie = await getMovie(id);
     if (!movie) notFound();
+    const result = await getMediaStatus(userId, id);
 
     return (
         <main className="min-h-screen bg-gray-100 text-gray-900">
@@ -110,9 +125,17 @@ export default async function MoviePage({ params="123" }) {
 
                 <Divider/>
 
-                <MediaActionButtons/>
-
+                <div className="mt-4">
+              <CollectionDropdown
+                  currentStatus={result === null ? "UNSPECIFIED" : result.status}
+                verb="Watch"
+                verb2="Watching"
+                userId={userId}
+                mediaId={movie.mediaId}
+                mediaType={movie.type}
+              />
             </div>
+          </div>
         </main>
     );
 }
