@@ -56,7 +56,7 @@ function pickCover(
  * @param {{ params: { id: string } }} props
  */
 export default async function MediaPage({ params }) {
-  const { mediaType: rawMediaType } = params;
+  const { mediaType: rawMediaType } = await params;
   const mediaTypeKey = normalizeTypeKey(rawMediaType);
   const wantedType = typeMap[mediaTypeKey];
 
