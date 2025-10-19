@@ -128,13 +128,13 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUserById(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateUserDTO body) {
-        return ResponseEntity.ok(service.updateProfile(id, body));
+        return ResponseEntity.ok(userService.updateProfile(id, body));
     }
 
 
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateById(@PathVariable UUID id) {
-        service.deactivate(id);
+        userService.deactivate(id);
     }
 }
