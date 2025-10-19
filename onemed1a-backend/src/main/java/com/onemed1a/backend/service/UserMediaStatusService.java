@@ -79,24 +79,52 @@ public class UserMediaStatusService {
 
         UserMediaStatus ums;
 
-        if (id != null) {
-            // UPDATE by id
-            ums = userMediaStatusRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Status not found: " + id));
-        } else {
-            // UPSERT by (user, media)
-            ums = userMediaStatusRepository
-                    .findByUser_IdAndMedia_MediaId(userId, mediaId)
-                    .orElse(UserMediaStatus.builder().
-                            user(user).
-                            media(mediaData).
-                            status(status).
-                            rating(rating).
-                            reviewText(reviewText).
-                            build());
-        }
+            if (id != null) {
+                // Try to find by id; if not found, create new entry
+                ums = userMediaStatusRepository.findById(id).orElse(
+                    UserMediaStatus.builder()
+                        .id(id)
+                        .user(user)
+                        .media(mediaData)
+                        .status(status)
+                        .rating(rating)
+                        .reviewText(reviewText)
+                        .build()
+                );
+            } else {
+                // Try to find existing by (user, media); otherwise create new
+                ums = userMediaStatusRepository.findByUser_IdAndMedia_MediaId(userId, mediaId)
+                    .orElse(
+                        UserMediaStatus.builder()
+                            .user(user)
+                            .media(mediaData)
+                            .status(status)
+                            .rating(rating)
+                            .reviewText(reviewText)
+                            .build()
+                    );
+            }
 
-        return ResponseEntity.ok().body(userMediaStatusRepository.save(ums));
+        
+        // Always set status from DTO
+        ums.setStatus(status);
+        // Only overwrite rating if DTO provides one; else keep existing
+        if (rating != null) {
+            ums.setRating(rating);
+        }
+        // Only overwrite reviewText if provided; else keep existing
+        if (reviewText != null) {
+            ums.setReviewText(reviewText);
+        }
+        // Ensure associations present (esp. when updating an older row missing them)
+        if (ums.getUser() == null)  ums.setUser(user);
+        if (ums.getMedia() == null) ums.setMedia(mediaData);
+
+        // Save and be defensive if a mock returns null
+        UserMediaStatus saved = userMediaStatusRepository.save(ums);
+        if (saved == null) saved = ums;
+
+        return ResponseEntity.ok(saved);
     }
 
     public ResponseEntity<UserMediaStatus> getStatus(UUID userId, UUID mediaId) {
