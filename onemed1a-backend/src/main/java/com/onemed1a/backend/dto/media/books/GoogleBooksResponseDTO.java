@@ -5,6 +5,11 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Represents the top-level response from the Google Books API.
+ *
+ * Contains the total number of items and a list of book entries.
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter

@@ -5,6 +5,11 @@ import lombok.*;
 
 import java.util.List;
 
+/**
+ * Represents a single TV show entry returned by the TMDB API.
+ *
+ * Includes key metadata such as title, language, genres, and ratings.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

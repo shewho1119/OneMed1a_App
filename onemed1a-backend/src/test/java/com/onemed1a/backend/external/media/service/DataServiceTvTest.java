@@ -17,6 +17,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+
+/**
+ * Unit tests for {@link DataService} focused on TMDB TV integration.
+ *
+ * Verifies that TV shows returned from TMDB are parsed into MediaData
+ * and persisted via the repository.
+ */
 class DataServiceTvTest {
 
     private DataService dataService;
@@ -28,8 +35,10 @@ class DataServiceTvTest {
         repository = mock(MediaDataRepository.class);
         restTemplate = mock(RestTemplate.class);
 
+        // Inject mocks into service under test
         dataService = new DataService(repository, restTemplate);
 
+        // Provide fake configuration values for @Value fields
         ReflectionTestUtils.setField(dataService, "movieApiUrl", "http://fake.example/movies");
         ReflectionTestUtils.setField(dataService, "tvApiUrl", "http://fake.example/tv");
         ReflectionTestUtils.setField(dataService, "spotifySearchUrl", "http://fake.example/search");
@@ -39,13 +48,23 @@ class DataServiceTvTest {
         ReflectionTestUtils.setField(dataService, "googleBooksUri", "http://fake.example/books");
         ReflectionTestUtils.setField(dataService, "googleBooksApiKey", "key");
 
+        // Simulate saveAll echoing its input back
         when(repository.saveAll(anyList())).thenAnswer(inv -> inv.getArgument(0));
     }
 
 
+    /**
+     * Verifies that {@link DataService#getTvMediaItems()} correctly fetches,
+     * maps, and persists TV show data from a simulated TMDB API response.
+     *
+     * The test stubs a fake TMDB TV response containing one show ("Breaking Bad"),
+     * executes the service call, and asserts that:
+     * - The returned MediaData list has the correct title and genre values.
+     * - The repository's saveAll() method is invoked with the mapped result.
+     */
     @Test
     void shouldFetchAndSaveTvShows() {
-        // Fake TMDB TV response
+        // Build a fake TMDB TV response
         TmdbTVResponse tv = new TmdbTVResponse();
         tv.setId(101);
         tv.setName("Breaking Bad");
@@ -58,11 +77,15 @@ class DataServiceTvTest {
         TmdbTVResponseDTO dto = new TmdbTVResponseDTO();
         dto.setResults(List.of(tv));
 
+        // Stub HTTP GET to TMDB
         when(restTemplate.exchange(any(URI.class), eq(HttpMethod.GET), any(), eq(TmdbTVResponseDTO.class)))
                 .thenReturn(new ResponseEntity<>(dto, HttpStatus.OK));
 
+        // Execute
         var result = dataService.getTvMediaItems().getBody();
 
+
+        // Verify mapping and persistence behavior
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getTitle()).isEqualTo("Breaking Bad");
         assertThat(result.get(0).getGenres()).containsExactly("18", "80");

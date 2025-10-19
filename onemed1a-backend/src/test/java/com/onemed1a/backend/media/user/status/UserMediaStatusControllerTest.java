@@ -15,17 +15,32 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for {@link UserMediaStatusController}.
+ *
+ * Verifies that controller endpoints correctly handle user media status
+ * retrieval, creation/updating, and deletion through the underlying service layer.
+ */
 class UserMediaStatusControllerTest {
 
     private UserMediaStatusController controller;
     private UserMediaStatusService service;
 
+    /**
+     * Initializes the controller and service mocks before each test.
+     */
     @BeforeEach
     void setup() {
         service = mock(UserMediaStatusService.class);
         controller = new UserMediaStatusController(service);
     }
 
+    /**
+     * Verifies that {@link UserMediaStatusController#getUserMediaByUserId(UUID, UserMediaStatus.Status, MediaData.MediaType, int, int, String)}
+     * correctly delegates to the service and returns filtered results for a user.
+     *
+     * Ensures the response contains the expected status and that the service method is invoked once.
+     */
     @Test
     void shouldReturnUserMediaByUserIdWithFiltersAndPaging() {
         UUID userId = UUID.randomUUID();
@@ -52,6 +67,11 @@ class UserMediaStatusControllerTest {
         verify(service).getUserMedia(userId, UserMediaStatus.Status.WATCHING, MediaData.MediaType.MOVIE);
     }
 
+    /**
+     * Verifies that {@link UserMediaStatusController#createUserMediaStatus(UserMediaStatusDTO)}
+     * correctly calls the service upsert method and returns a 200 response
+     * with the updated {@link UserMediaStatus}.
+     */
     @Test
     void shouldCreateOrUpdateStatus() {
         UUID id = UUID.randomUUID();
@@ -87,6 +107,11 @@ class UserMediaStatusControllerTest {
         verify(service).upsert(dto);
     }
 
+    /**
+     * Verifies that {@link UserMediaStatusController#deleteUserMediaStatus(UUID)}
+     * delegates correctly to {@link UserMediaStatusService#delete(UUID)} and
+     * returns a successful response containing the deleted status ID.
+     */
     @Test
     void shouldDeleteStatusAndReturnId() {
         UUID statusId = UUID.randomUUID();

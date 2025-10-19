@@ -17,6 +17,12 @@ import com.onemed1a.backend.service.SearchService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controller for search-related endpoints.
+ *
+ * Provides APIs for full-text search and lightweight title suggestions
+ * across different media types.
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/media")
@@ -24,13 +30,26 @@ public class SearchController {
 
     private final SearchService service;
 
-    /** Full results with filters; supports ?page=&size=&sort=title,asc */
+    /**
+     * Performs a full search for media items using optional filters.
+     * Supports pagination, sorting, and complex search queries.
+     *
+     * @param req the search request containing filters and query parameters
+     * @param pageable pagination and sorting information
+     * @return a paginated list of search result items
+     */
     @GetMapping("/search")
     public Page<SearchResultItem> search(@ModelAttribute SearchRequest req, Pageable pageable) {
         return service.search(req, pageable);
     }
 
-    /** Lightweight autocomplete (title prefix), default 5 items */
+    /**
+     * Provides quick autocomplete suggestions for media titles.
+     *
+     * @param q text prefix for suggestion search
+     * @param limit maximum number of suggestions to return (default 5)
+     * @return a list of suggested media titles
+     */
     @GetMapping("/suggest")
     public List<SuggestResultItem> suggest(@RequestParam String q,
                                            @RequestParam(defaultValue = "5") int limit) {

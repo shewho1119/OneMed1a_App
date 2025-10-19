@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Service layer for managing and retrieving media data.
+ *
+ * Provides methods for filtering media records and fetching by ID.
+ */
 @Service
 public class MediaDataService {
     private final MediaDataRepository mediaDataRepository;
@@ -15,6 +20,16 @@ public class MediaDataService {
         this.mediaDataRepository = mediaDataRepository;
     }
 
+
+    /**
+     * Retrieves a list of media items filtered by optional parameters.
+     *
+     * @param q optional search text for title
+     * @param type optional media type filter
+     * @param year optional release year filter
+     * @param genre optional genre filter
+     * @return a filtered list of media items
+     */
     public List<MediaData> getAllMedia(
         String q, String type, Integer year, String genre) {
 
@@ -28,6 +43,12 @@ public class MediaDataService {
 }
 
 
+    /**
+     * Retrieves a media item by its unique ID.
+     *
+     * @param id the media ID
+     * @return an optional containing the media if found
+     */
     public Optional<MediaData> getMediaById(UUID id) {
         return mediaDataRepository.findById(id);
     }

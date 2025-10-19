@@ -27,6 +27,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controller for managing user accounts and authentication.
+ *
+ * Handles user registration, login, logout, profile management,
+ * and admin operations such as user deactivation or updates.
+ */
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -124,6 +130,14 @@ public class UserController {
         userService.deactivate(userId);
     }
 
+
+    /**
+     * Updates a user's profile by ID (admin only).
+     *
+     * @param id user ID to update
+     * @param body updated user information
+     * @return the updated user
+     */
     @PatchMapping("/users/{id}")
     public ResponseEntity<UserDTO> updateUserById(
             @PathVariable UUID id,
@@ -131,7 +145,11 @@ public class UserController {
         return ResponseEntity.ok(userService.updateProfile(id, body));
     }
 
-
+    /**
+     * Deactivates a user account by ID (admin only).
+     *
+     * @param id user ID to deactivate
+     */
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateById(@PathVariable UUID id) {

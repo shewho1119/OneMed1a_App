@@ -6,6 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+/**
+ * Represents the response returned from Spotify's OAuth token API.
+ *
+ * Contains the access token and its expiration information.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

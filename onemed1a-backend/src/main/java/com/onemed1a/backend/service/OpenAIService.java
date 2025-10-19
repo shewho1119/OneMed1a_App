@@ -12,11 +12,24 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
 
+/**
+ * Service for generating media recommendations using OpenAI.
+ *
+ * Creates a prompt, calls the OpenAI chat completions API, parses the response,
+ * and returns or persists recommended media items.
+ */
 @Service
 public class OpenAIService {
 
     private final OpenAIClient client;
     private final MediaDataRepository mediaDataRepository;
+
+    /**
+     * Creates a new OpenAIService with the given API key and repository.
+     *
+     * @param apiKey OpenAI API key
+     * @param mediaDataRepository repository used to find or save media items
+     */
     public OpenAIService(@Value("${open.api.key}") String apiKey, 
                          MediaDataRepository mediaDataRepository) {
         this.client = OpenAIOkHttpClient.builder()
@@ -25,6 +38,17 @@ public class OpenAIService {
         this.mediaDataRepository = mediaDataRepository;
     }
 
+    /**
+     * Generates up to five similar media recommendations for a given input.
+     *
+     * The response is parsed from a pipe-separated format. For each item:
+     * - If a matching title and type already exist, it is reused.
+     * - Otherwise, a new MediaData is created and saved.
+     *
+     * @param mediaType type of the source media (MOVIE, TV, MUSIC, BOOKS)
+     * @param mediaName title or name of the source media
+     * @return a list of recommended MediaData items (existing or newly saved)
+     */
     public List<MediaData> getRecommendation(String mediaType, String mediaName) {
         String prompt = String.format("""
                 You are a recommendation engine.
@@ -46,14 +70,17 @@ public class OpenAIService {
                 ...and so on until 5 items.
                 """, mediaName, mediaType);
 
+        // Prepare the API request to the OpenAI client
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .addUserMessage(prompt)
                 .model("gpt-5-nano") 
                 .build();
 
+        // Call the OpenAI API to generate recommendations
         ChatCompletion response = client.chat().completions().create(params);
         String res = response.choices().get(0).message().content().orElse("No content available");
 
+        // List to hold all parsed and stored recommendation results
         List<MediaData> recommendations = new ArrayList<>();
         String[] items = res.split("\\r?\\n"); // split by newline
         for (String item : items) {
@@ -67,6 +94,7 @@ public class OpenAIService {
                         String type = fields[4].trim().toUpperCase();
                         MediaType mediaTypeEnum;
                         try {
+                                // Convert type string to enum (skip invalid types)
                                 mediaTypeEnum = MediaType.valueOf(type);
                         } catch (IllegalArgumentException e) {
                                 continue; // Skip this item if the type is invalid

@@ -5,7 +5,11 @@ import lombok.*;
 
 import java.util.UUID;
 
-/** Minimal payload for autocomplete dropdown */
+/**
+ * Represents a lightweight suggestion item for autocomplete or search hints.
+ *
+ * Contains only basic identifiers needed for dropdown suggestions.
+ */
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class SuggestResultItem {
     private UUID id;

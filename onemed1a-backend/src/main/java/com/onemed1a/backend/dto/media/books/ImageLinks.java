@@ -3,6 +3,12 @@ package com.onemed1a.backend.dto.media.books;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
+
+/**
+ * Represents the image links for a book returned by the Google Books API.
+ *
+ * Commonly includes small and standard thumbnails.
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter

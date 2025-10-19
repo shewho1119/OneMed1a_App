@@ -6,7 +6,12 @@ import lombok.*;
 
 import java.util.UUID;
 
-/** Query params for /media/search bound via @ModelAttribute */
+
+/**
+ * Represents the search filters and parameters for querying media items.
+ *
+ * Used in /media/search endpoint to filter results by title, type, year, genre, or user status.
+ */
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class SearchRequest {
     private String q;                         // text in title

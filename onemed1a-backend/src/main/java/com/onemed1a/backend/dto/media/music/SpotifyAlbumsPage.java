@@ -8,7 +8,14 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Setter
+
+/**
+ * Represents a paginated page of albums returned by the Spotify Web API.
+ *
+ * Includes metadata such as paging links, limits, and total results.
+ */
+@Getter 
+@Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SpotifyAlbumsPage {
     private String href;

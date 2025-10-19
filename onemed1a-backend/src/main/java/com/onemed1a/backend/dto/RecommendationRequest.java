@@ -1,11 +1,15 @@
 package com.onemed1a.backend.dto;
 
-    // DTO for request
+/**
+ * Data Transfer Object for requesting media recommendations.
+ *
+ * Used by the frontend to request related media based on a type and name.
+ */
 public class RecommendationRequest {
     private String mediaType;
     private String mediaName;
 
-    // Default constructor
+    /** Default constructor. */
     public RecommendationRequest() {}   
 
     // Getters & setters

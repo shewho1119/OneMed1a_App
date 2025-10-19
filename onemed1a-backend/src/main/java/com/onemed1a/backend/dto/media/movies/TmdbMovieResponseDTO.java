@@ -5,7 +5,11 @@ import lombok.Setter;
 
 import java.util.List;
 
-
+/**
+ * Represents the paginated response from the TMDB movie API.
+ *
+ * Contains metadata such as page number and the list of movie results.
+ */
 @Getter
 @Setter
 public class TmdbMovieResponseDTO {

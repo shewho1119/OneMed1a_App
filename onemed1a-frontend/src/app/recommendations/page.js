@@ -5,6 +5,12 @@ import MediaGrid from "@/components/MediaGrid";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { getRecommendation } from "@/api/reccomendationAPI";
 
+/**
+ * Helper function to wrap API calls with basic error handling.
+ * @param {string} mediaType - The type of media (MOVIE, TV, BOOK, MUSIC)
+ * @param {string} mediaName - The name/title of the media item to base recommendations on
+ * @returns {Promise<Array>} List of recommended media objects
+ */
 async function fetchRecommendations(mediaType, mediaName) {
   try {
     const recommendations = await getRecommendation(mediaType, mediaName);
@@ -15,9 +21,18 @@ async function fetchRecommendations(mediaType, mediaName) {
   }
 }
 
+/**
+ * Page: RecommendationPage
+ *
+ * Displays a form that allows users to select a media type and enter a title.
+ * Upon submission, it fetches recommended items using the backend recommendation API,
+ * displays a loading spinner overlay during fetch, and renders results in a responsive grid.
+ */
 export default function RecommndationPage() {
   const [mediaType, setMediaType] = useState("");
   const [mediaName, setMediaName] = useState("");
+
+  // Result and loading state
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,9 +43,16 @@ export default function RecommndationPage() {
     return "/next.svg";
   }
 
+  /** Extracts the year (YYYY) from a date string if available. */
   const toYear = (dateStr) =>
     dateStr ? Number(String(dateStr).slice(0, 4)) : undefined;
 
+
+  /**
+   * Handles form submission.
+   * Fetches recommendations, transforms data for MediaGrid,
+   * and toggles the loading overlay.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!mediaType || !mediaName) {
@@ -75,6 +97,7 @@ export default function RecommndationPage() {
             </h2>
           </div>
 
+          {/* Input form */}
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="rounded-md space-y-4">
               <label htmlFor="mediaName" className="sr-only">
@@ -90,6 +113,8 @@ export default function RecommndationPage() {
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Enter media name"
               />
+
+              {/* Media Type Select */}
               <div>
                 <label htmlFor="mediaType" className="sr-only">
                   Media type
@@ -113,6 +138,7 @@ export default function RecommndationPage() {
               </div>
             </div>
 
+            {/* Submit Button */}
             <div>
               <button
                 type="submit"
@@ -123,6 +149,7 @@ export default function RecommndationPage() {
               </button>
             </div>
 
+            {/* Result Grid */}
             <MediaGrid items={items} />
           </form>
         </div>
