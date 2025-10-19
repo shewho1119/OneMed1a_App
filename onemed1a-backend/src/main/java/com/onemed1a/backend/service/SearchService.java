@@ -20,18 +20,42 @@ import com.onemed1a.backend.repository.spec.MediaSearchSpecification;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Service for full-text search and lightweight suggestions over media data.
+ *
+ * Uses JPA Specifications for filtering, paging, and sorting.
+ */
 @Service
 @RequiredArgsConstructor
 public class SearchService {
 
     private final MediaDataRepository mediaRepo;
 
+    /**
+     * Performs a filtered search over media data.
+     *
+     * Applies filters from the request and returns a paginated list
+     * of lightweight result items.
+     *
+     * @param req search filters and query parameters
+     * @param pageable paging and sorting configuration
+     * @return a page of search results
+     */
     public Page<SearchResultItem> search(SearchRequest req, Pageable pageable) {
         var spec = MediaSearchSpecification.from(req);
         return mediaRepo.findAll(spec, pageable)
                 .map(SearchMappers::toResultItem);
     }
 
+    /**
+     * Returns up to {@code limit} autocomplete suggestions for a query prefix.
+     *
+     * Results are deduplicated by normalized title and type while preserving order.
+     *
+     * @param q text prefix to match against titles
+     * @param limit maximum number of suggestions (1 to 10)
+     * @return a list of suggestion items
+     */
     public List<SuggestResultItem> suggest(String q, int limit) {
         // cap limit between 1 and 10 without relying on Math.clamp for older JDKs
         int cap = Math.max(1, Math.min(limit, 10));

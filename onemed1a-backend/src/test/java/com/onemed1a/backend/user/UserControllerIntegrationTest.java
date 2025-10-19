@@ -28,6 +28,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Full integration tests for the User API endpoints.
+ *
+ * These tests verify end-to-end user creation, retrieval, update, and deletion
+ * behavior through real HTTP calls against a test database.
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -42,6 +48,10 @@ class UserControllerIntegrationTest {
     String createdEmail;
     String plainPassword = "Test123!";
 
+    /**
+     * Creates a test user before each test using the /createuser endpoint.
+     * Verifies that passwords are hashed in the persisted record.
+     */
     @BeforeEach
     void setup() throws Exception {
         createdEmail = "alice+" + UUID.randomUUID() + "@example.com";
@@ -69,6 +79,9 @@ class UserControllerIntegrationTest {
         assertThat(createdUser.getPassword()).isNotEqualTo(plainPassword);
     }
 
+    /**
+     * Verifies that GET /users/{id} returns the correct user created in setup().
+     */
     @Test
     void getUserById_returnsCreatedUser() throws Exception {
         mvc.perform(get("/api/v1/users/{id}", userId))
@@ -76,17 +89,23 @@ class UserControllerIntegrationTest {
           .andExpect(jsonPath("$.email").value(createdEmail));
     }
 
+    /**
+     * Verifies that a user can be updated and then soft-deleted
+     * via PATCH and DELETE API calls respectively.
+     */
     @Test
     void update_then_delete_flow() throws Exception {
         UpdateUserDTO upd = new UpdateUserDTO();
         upd.setFirstName("Alicia");
 
+        // Update the user's first name
         mvc.perform(patch("/api/v1/users/{id}", userId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(om.writeValueAsString(upd)))
           .andExpect(status().isOk())
           .andExpect(jsonPath("$.firstName").value("Alicia"));
 
+        // Verify the update persisted
         mvc.perform(delete("/api/v1/users/{id}", userId))
           .andExpect(status().isNoContent());
 

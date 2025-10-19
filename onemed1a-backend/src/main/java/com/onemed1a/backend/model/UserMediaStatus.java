@@ -10,6 +10,11 @@ import lombok.*;
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * Entity linking a user to a specific media item with a status, rating, and optional review.
+ *
+ * Tracks user progress and feedback for movies, shows, music, or books.
+ */
 @Builder
 @Getter
 @Setter
@@ -54,6 +59,7 @@ public class UserMediaStatus {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    /** Automatically updates the timestamp when the record changes. */
     @PreUpdate
     protected void onUpdate() {
         updatedAt = Instant.now();
@@ -62,6 +68,7 @@ public class UserMediaStatus {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
+    /** Automatically sets creation and initial update timestamps. */
     @PrePersist
     protected void onCreate() {
         if (createdAt == null) createdAt = Instant.now();

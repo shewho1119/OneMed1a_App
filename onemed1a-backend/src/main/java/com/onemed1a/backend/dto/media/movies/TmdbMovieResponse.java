@@ -8,6 +8,12 @@ import lombok.Setter;
 
 import java.util.List;
 
+
+/**
+ * Represents a single movie item returned from the TMDB API.
+ *
+ * Includes basic details such as title, language, genres, and ratings.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

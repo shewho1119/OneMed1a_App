@@ -21,8 +21,15 @@ import static com.onemed1a.backend.model.MediaData.MediaType.TV;
 import static com.onemed1a.backend.model.UserMediaStatus.Status.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for {@link UserMediaStatusService}.
+ *
+ * These tests verify user-media status operations including creation, updating,
+ * deletion, and filtering behavior. All repository interactions are mocked.
+ */
 class UserMediaStatusServiceTest {
 
     private UserMediaStatusService service;
@@ -30,6 +37,9 @@ class UserMediaStatusServiceTest {
     private UserRepository userRepo;
     private MediaDataRepository mediaRepo;
 
+    /**
+     * Initializes mocked repositories and the service before each test.
+     */
     @BeforeEach
     void setup() {
         umsRepo = mock(UserMediaStatusRepository.class);
@@ -38,6 +48,10 @@ class UserMediaStatusServiceTest {
         service = new UserMediaStatusService(umsRepo, userRepo, mediaRepo);
     }
 
+    /**
+     * Verifies that {@link UserMediaStatusService#getUserMedia(UUID, UserMediaStatus.Status, MediaData.MediaType)}
+     * correctly filters results by both status and media type.
+     */
     @Test
     void shouldFilterByStatusAndTypeInGetUserMedia() {
         UUID userId = UUID.randomUUID();
@@ -67,6 +81,10 @@ class UserMediaStatusServiceTest {
         verify(umsRepo).findByUser_Id(userId);
     }
 
+    /**
+     * Verifies that {@link UserMediaStatusService#upsert(UserMediaStatusDTO)} creates
+     * a new record when no existing entry is found for the provided ID.
+     */
     @Test
     void upsert_shouldCreateWhenNoExistingRecord() {
         UUID userId = UUID.randomUUID();
@@ -107,6 +125,10 @@ class UserMediaStatusServiceTest {
         verify(umsRepo).save(any(UserMediaStatus.class));
     }
 
+    /**
+     * Verifies that {@link UserMediaStatusService#upsert(UserMediaStatusDTO)} updates
+     * an existing record when one is found for the given ID.
+     */
     @Test
     void upsert_shouldUpdateWhenExistingRecordFound() {
         UUID userId = UUID.randomUUID();
@@ -150,6 +172,10 @@ class UserMediaStatusServiceTest {
         verify(umsRepo).save(existing);
     }
 
+    /**
+     * Verifies that upsert throws an {@link IllegalArgumentException}
+     * when the user cannot be found in the repository.
+     */
     @Test
     void upsert_shouldThrowWhenUserMissing() {
         UUID userId = UUID.randomUUID();
@@ -174,6 +200,10 @@ class UserMediaStatusServiceTest {
         verifyNoInteractions(mediaRepo, umsRepo);
     }
 
+    /**
+     * Verifies that upsert throws an {@link IllegalArgumentException}
+     * when the associated media cannot be found.
+     */
     @Test
     void upsert_shouldThrowWhenMediaMissing() {
         UUID userId = UUID.randomUUID();
@@ -200,6 +230,10 @@ class UserMediaStatusServiceTest {
         verifyNoMoreInteractions(umsRepo);
     }
 
+    /**
+     * Verifies that {@link UserMediaStatusService#delete(UUID)} calls the repository’s
+     * deleteById method and returns false as per current implementation.
+     */
     @Test
     void delete_shouldCallRepositoryAndReturnFalsePerImplementation() {
         UUID statusId = UUID.randomUUID();

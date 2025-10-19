@@ -6,7 +6,11 @@ import lombok.*;
 import java.util.List;
 import java.util.UUID;
 
-/** Lightweight result for the results page */
+/**
+ * Represents a single search result entry displayed on the results page.
+ *
+ * Contains essential media details such as title, type, release date, and genres.
+ */
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class SearchResultItem {
     private UUID id;                  // MediaData.mediaId

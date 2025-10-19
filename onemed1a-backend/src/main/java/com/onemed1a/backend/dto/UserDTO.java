@@ -9,6 +9,12 @@ import com.onemed1a.backend.model.User.Gender;
 import lombok.Builder;
 import lombok.Value;
 
+
+/**
+ * Data Transfer Object for returning user details.
+ *
+ * Represents the user profile data shared with the frontend.
+ */
 @Value
 @Builder
 public class UserDTO {

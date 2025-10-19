@@ -20,6 +20,12 @@ import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * Unit tests for {@link UserService}.
+ *
+ * Verifies that user creation encodes passwords, checks email uniqueness,
+ * and persists the entity before mapping to {@link UserDTO}.
+ */
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
@@ -32,6 +38,13 @@ class UserServiceTest {
     @InjectMocks
     private UserService service;
 
+
+    /**
+     * Ensures {@link UserService#create(CreateUserDTO)}:
+     * - Rejects duplicate emails (via existsByEmail check)
+     * - Encodes the provided password
+     * - Saves the user and returns a populated {@link UserDTO}
+     */
     @Test
     void create_savesUser() {
         UUID userId = UUID.randomUUID();

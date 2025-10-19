@@ -9,6 +9,11 @@ import lombok.Setter;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents a Spotify album returned from the Spotify Web API.
+ *
+ * Contains album metadata such as name, release date, artists, and cover images.
+ */
 @Getter @Setter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SpotifyAlbum {

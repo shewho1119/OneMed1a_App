@@ -5,6 +5,12 @@ import lombok.*;
 
 import java.util.List;
 
+
+/**
+ * Represents detailed metadata about a book from the Google Books API.
+ *
+ * Includes title, authors, publication details, categories, and cover images.
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
@@ -31,6 +37,10 @@ public class VolumeInfo {
     private String canonicalVolumeLink;
 }
 
+
+/**
+ * Represents a book's industry identifier such as ISBN codes.
+ */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
@@ -38,7 +48,11 @@ public class VolumeInfo {
 @AllArgsConstructor
 @NoArgsConstructor
 class IndustryIdentifier {
-    private String type;        // ISBN_13, ISBN_10
-    private String identifier;  // value
+
+      /** Type of identifier (e.g., ISBN_13, ISBN_10). */
+    private String type;       
+
+    /** The actual identifier value. */
+    private String identifier;
 }
 

@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Controller for handling requests related to media data.
+ *
+ * Provides endpoints to list media items with optional filters
+ * and to fetch a single media item by its ID.
+ */
 @RestController
 @RequestMapping("/media")
 
@@ -19,10 +25,27 @@ public class MediaDataController {
 
     private final MediaDataService mediaDataService;
 
+     /**
+     * Creates a new MediaDataController with the given service.
+     *
+     * @param mediaDataService service for accessing media data
+     */
     public MediaDataController(MediaDataService mediaDataService) {
         this.mediaDataService = mediaDataService;
     }
 
+    /**
+     * Returns all media items, optionally filtered by query, type, year, or genre.
+     *
+     * @param q optional text query for search
+     * @param type optional media type filter (e.g., movie, book)
+     * @param year optional release or publish year
+     * @param genre optional genre filter
+     * @param page page number (currently unused)
+     * @param size page size (currently unused)
+     * @param sort sort order (currently unused)
+     * @return a list of media items matching the filters
+     */
     @RequestMapping
     public List<MediaData> getAllMedia(
         @RequestParam(required = false) String q,
@@ -35,6 +58,14 @@ public class MediaDataController {
     ) {
         return mediaDataService.getAllMedia(q, type, year, genre);
     }
+
+    /**
+     * Returns a single media item by its ID.
+     *
+     * @param id unique ID of the media item
+     * @return the media item if found
+     * @throws ResponseStatusException if the media item does not exist
+     */
     @RequestMapping("/{id}")
     public MediaData getMediaById(@PathVariable UUID id) {
         return mediaDataService.getMediaById(id)

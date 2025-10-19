@@ -19,6 +19,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entity representing a registered user in the system.
+ *
+ * Stores authentication details and personal profile information.
+ */
 @Entity
 @Table(name = "users")
 @Data
@@ -27,6 +32,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User {
 
+    /** Unique identifier for the user. */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -43,6 +49,7 @@ public class User {
     @Column(nullable=false)
     private String password;
 
+    /** Gender of the user (defaults to UNSPECIFIED). */
     @Enumerated(EnumType.STRING)
     @Column(nullable=false, length=16)
     @Builder.Default
@@ -51,14 +58,17 @@ public class User {
     @Column(name="date_of_birth")
     private LocalDate dateOfBirth;
 
+    /** Timestamp when the user was created. */
     @CreationTimestamp
     @Column(name="created_at", nullable=false, updatable=false)
     private OffsetDateTime createdAt;
 
+    /** Whether the account is currently active. */
     @Column(nullable=false)
     @Builder.Default
     private boolean active = true;
 
+    /** Enum representing available gender options. */
     public enum Gender {
         MALE, FEMALE, NON_BINARY, UNSPECIFIED
     }
